@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://results.opinion.com" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://results.opinion.com" xmlns:intf="http://results.opinion.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://results.opinion.com" xmlns="http://www.w3.org/2001/XMLSchema">
+   <element name="answerType">
+    <complexType/>
+   </element>
+   <element name="answerTypeResponse">
+    <complexType>
+     <sequence>
+      <element name="answerTypeReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="answerTypeResponse">
+
+      <wsdl:part element="impl:answerTypeResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="answerTypeRequest">
+
+      <wsdl:part element="impl:answerType" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="useropinion">
+
+      <wsdl:operation name="answerType">
+
+         <wsdl:input message="impl:answerTypeRequest" name="answerTypeRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:answerTypeResponse" name="answerTypeResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="useropinionSoapBinding" type="impl:useropinion">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="answerType">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="answerTypeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="answerTypeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="useropinionService">
+
+      <wsdl:port binding="impl:useropinionSoapBinding" name="useropinion">
+
+         <wsdlsoap:address location="http://localhost:8080/ProductOpinion/services/useropinion"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

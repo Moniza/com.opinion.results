@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+	
+</script>
+<script>
+	$(document)
+			.ready(
+					function() {
+
+						$('#askques').click(function() {
+							$('#askques').fadeOut();
+						});
+
+						$("#ansbtn")
+								.click(
+										function() {
+											var questext = $("#textarea").val();
+											//alert(questext);
+											$('#askques').fadeIn();
+											if (questext == "") {
+												$('#askques')
+														.text(
+																"Click Here To Ask Question");
+											} else {
+												$('#askques').text(questext);
+											}
+											$("#div1").empty();
+											$
+													.ajax({
+														url : "http://localhost:8080/com.opinion.results/rest/opinion/at/"
+																+ $("#textarea")
+																		.val(),
+														async : true,
+														type : 'GET',
+														//dataType:'jsonp'
+														crossDomain : true,
+														success : function(
+																result) {
+															alert(result)
+															var obj = JSON
+																	.parse(result);
+															var i = 0;
+															var innerHTML = "";
+															var jsonArr = [];
+															var jsonArr1=[];
+															for (i = 0; i < obj.attributes.length; i++) {
+																var featurename = obj.attributes[i].attribute
+																innerHTML = "<div class='panel'><h3>"
+																		+ featurename
+																		+ "</h3><div class='panel-body'>";
+																try {
+																	var positiveOpinion = obj.attributes[i].pos;
+																	var posScore = obj.attributes[i].positive;
+																	if (typeof posScore === "undefined") {
+																		innerHTML = innerHTML;
+																	} else {
+																		innerHTML = innerHTML
+																				+ "<h4 class='green'>Positive: "
+																				+ posScore
+																				+ "</h4> "
+																				+ "<label>"
+																				+ positiveOpinion
+																				+ "</label>";
+																		posScore = parseInt(
+																				posScore,
+																				10);
+																	}
+																} catch (e) {
+
+																}
+																try {
+																	var negativeOpinion = obj.attributes[i].neg;
+																	var negScore = obj.attributes[i].negative;
+																	if (typeof negScore === "undefined") {
+																		innerHTML = innerHTML;
+																	} else {
+																		innerHTML = innerHTML
+																				+ "<h4 class='red'>Negative: "
+																				+ negScore
+																				+ "</h4> "
+																				+ "<label>"
+																				+ negativeOpinion
+																				+ "</label></div></div>";
+																		negScore = parseInt(
+																				negScore,
+																				10);
+																	}
+																} catch (e) {
+
+																}
+																if (typeof posScore === "undefined") {
+																	posScore = parseInt(
+																			100,
+																			10)
+																			- parseInt(
+																					negScore,
+																					10);
+
+																} else if (typeof negScore === "undefined") {
+																	negScore = parseInt(100,10)	- parseInt(	posScore,10);
+																	
+																}
+																
+																jsonArr.push({"attribute",obj.attributes[i].attribute});
+																jsonArr.push({"positive",posScore});
+																jsonArr.push({"negative",negScore});
+																jsonArr1.push({"attributes",jsonArr});
+																$("#div1")
+																		.append(innerHTML);
+																alert(jsonArr1);
+															}
+
+														},
+													
+													});
+										});
+
+					});
+</script>
+<style>
+body {
+	margin: 0;
+}
+
+.header,.question,.answer,.footer,.chart {
+	position: fixed;
+	width: 100%;
+}
+
+.header {
+	background: linear-gradient(#CA3838 10%, #7A0000 100%) repeat scroll 0 0
+		rgba(0, 0, 0, 0);
+	color: #FFFFFF;
+	font-size: 30px;
+	font-variant: small-caps;
+	font-weight: bold;
+	height: 50px;
+	padding: 10px 0 0;
+	text-align: center;
+	text-shadow: 1px 1px 1px #000000;
+	top: 0;
+	box-shadow: 0 0 5px 2px #000000;
+	z-index: 10;
+}
+
+.question {
+	background: #7B0101;
+	height: 65px;
+	top: 60px;
+}
+
+#textarea {
+	border-color: #398439;
+	border-radius: 5px 0 0 5px;
+	border-style: solid;
+	border-width: 2px 0 2px 2px;
+	height: 30px;
+	margin: 15px 0 15px 15px;
+	padding: 1px 10px;
+	width: calc(80% -   35px);
+}
+
+#ansbtn {
+	background: none repeat scroll 0 0 #50B050;
+	border-color: #398439;
+	border-radius: 0 5px 5px 0;
+	border-style: solid;
+	border-width: 2px 2px 2px 0;
+	height: 36px;
+	margin-left: -4px;
+	width: calc(20% -   17px);
+	color: #FFFFFF;
+	font-size: 15px;
+}
+
+.answer {
+	top: 125px;
+	bottom: 39px;
+	overflow: auto;
+	background: #cccccc;
+	width: 65%;
+}
+
+.chart {
+	background: none repeat scroll 0 0 #CCCCCC;
+	bottom: 39px;
+	overflow: auto;
+	right: 0;
+	top: 125px;
+	width: 35%;
+}
+
+#askques {
+	background: none repeat scroll 0 0 #5CB85C;
+	border: 2px solid #398439;
+	border-radius: 5px;
+	color: #FFFFFF;
+	font-size: 15px;
+	height: 36px;
+	left: 15px;
+	position: absolute;
+	top: 15px;
+	width: calc(100% -   30px);
+}
+
+.panel h3 {
+	background: none repeat scroll 0 0 #862030;
+	color: #FFFFFF;
+	font-variant: small-caps;
+	margin: 0;
+	padding: 10px 15px;
+}
+
+.panel h4,.panel label {
+	margin: 0;
+}
+
+.panel {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 1px solid #862030;
+	border-radius: 10px;
+	margin: 15px;
+	overflow: hidden;
+	padding-bottom: 10px;
+}
+
+.panel-body {
+	padding: 10px 15px;
+}
+
+.red {
+	color: #dd5a43;
+}
+
+.green {
+	color: #69aa46;
+}
+
+.footer {
+	background: linear-gradient(#CA3838 0%, #7A0000 70%) repeat scroll 0 0
+		rgba(0, 0, 0, 0);
+	bottom: 0;
+	height: 36px;
+	padding-top: 3px;
+}
+
+.footer>div {
+	color: #FFFFFF;
+	float: right;
+	font-size: 13px;
+	margin-right: 40px;
+}
+</style>
+</head>
+<body>
+	<div class="header">Answering Questions Based On Customers
+		Opinion</div>
+	<div class="question">
+		<input id="textarea" type="text" placeholder="Enter Your Question.." />
+		<button id="ansbtn">Answer it!</button>
+		<button id="askques">Click Here To Ask Question</button>
+	</div>
+
+	<div id="div1" class="answer"></div>
+	<div class="chart">
+		Chart
+		Here......................................................................<br />
+		Chart
+		Here......................................................................<br />
+		Chart
+		Here......................................................................<br />
+		Chart
+		Here......................................................................<br />
+		Chart
+		Here......................................................................<br />
+		Chart
+		Here......................................................................<br />
+		Chart
+		Here......................................................................<br />
+	</div>
+
+	<div class="footer">
+		<div>
+			Made By:- Moniza Sachdeva <br /> roll no. MIT-8-2k12
+		</div>
+	</div>
+</body>
+</html>
